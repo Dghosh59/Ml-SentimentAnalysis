@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(__file__))
 from feature_extractor import PreprocessingTransformer, CustomFeatureExtractor, VaderLexiconExtractor
 
 # Load trained pipeline
-pipeline = joblib.load("sentiment_pipeline.pkl")
+pipeline = joblib.load(os.path.join(os.path.dirname(__file__), "sentiment_pipeline.pkl"))
 
 # FastAPI app
 app = FastAPI(title="Sentiment Analysis API", version="1.0")
@@ -36,3 +36,4 @@ def predict_sentiment(request: SentimentRequest):
         "predicted_label": int(prediction),
         "probabilities": proba
     }
+
