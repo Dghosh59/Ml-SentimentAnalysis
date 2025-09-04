@@ -1,0 +1,13 @@
+numpy
+pandas
+seaborn
+matplotlib
+scikit-learn
+textblob
+imblearn
+nltk
+tensorflow
+gensim
+fastapi
+uvicorn
+-e .
