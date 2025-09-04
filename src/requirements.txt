@@ -10,4 +10,3 @@ tensorflow
 gensim
 fastapi
 uvicorn
--e .
