@@ -9,14 +9,25 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
 from Contractions import contractions
 from textblob import TextBlob
-"""
+from bs4 import BeautifulSoup
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
+
+
 nltk.download("stopwords")
 nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
-download These
-
-"""
+nltk.download('punkt_tab')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('vader_lexicon')
 
 
 class TextPreproccessor:
@@ -49,6 +60,12 @@ class TextPreproccessor:
         text = text.translate(str.maketrans("", "", string.punctuation))
 
         return text
+    
+    def remove_html_tags(self, text: str) -> str:
+        """Removes HTML tags from a string using BeautifulSoup."""
+        # Use the 'lxml' parser for speed and efficiency
+        soup = BeautifulSoup(text, "lxml")
+        return soup.get_text()
     
     def remove_stopwords(self,text,reserved = {"not", "no", "never", "none","neither","nor"}):
         stop_words = set(stopwords.words("english"))
@@ -108,6 +125,7 @@ class TextPreproccessor:
     def preproccess(self,text: str ):
 
         text = text.lower().strip()
+        text = self.remove_html_tags(text)
         text = self.remove_punctuation(text)
         text = self.clean_contractions(text)
         text = self.remove_stopwords(text)
@@ -122,6 +140,6 @@ class TextPreproccessor:
     def do_prepreoccessing(self,df : pd.DataFrame,column_name : str):
         return df[column_name].apply(self.preproccess)
 
-if __name__=="__main__":
-    preproccessor = TextPreproccessor() 
-    print(preproccessor.preproccess("The room was not very clean but had a VERY strong smell of dogs. Generally below average but ok for a overnight stay if you're not too fussy. Would consider staying again if the price was right. Breakfast was free and just about better than nothing"))
+# if __name__=="__main__":
+#     preproccessor = TextPreproccessor() 
+#     print(preproccessor.preproccess("Unique and luxurious to be sure. I couldn't recommend staying with Derk any more highly.<br/><br/>Coolest thing first: We showed up to Derk's and he actually had three houseboats in a row, and offered to show up the one we saw on the site and another, and let us choose our favorite to stay in!  We had an incredible boat with wired internet, a comfortable bed and a very comfortable futon, TV, speakers, hot water, a shower, washer/dryer.  I couldn't believe I was on a boat.  Plus the charm of being on one was fantastic, and the views out onto the canal were fantastic.  It rained one morning and was such a beautiful way to wake up.<br/><br/>In addition, Derk was really communicative, responded to our last minute (day before!) request for a reservation quite casually, and met us right at the boat.  He even had a few cold beers in the fridge for us, and was really great explaining the area.<br/><br/>Would recommend!"))
