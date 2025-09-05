@@ -11,7 +11,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 
 # Download VADER if not already present
-nltk.download('vader_lexicon')
+#nltk.download('vader_lexicon')
 
 
 # ----------- Custom Feature Extractor -----------
@@ -73,4 +73,5 @@ class PreprocessingTransformer(BaseEstimator, TransformerMixin):
         self.pre = TextPreproccessor()
     def fit(self, X, y=None): return self
     def transform(self, X):
+
         return [self.pre.preproccess(text) for text in X]
