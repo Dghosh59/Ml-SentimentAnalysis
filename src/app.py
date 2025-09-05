@@ -3,11 +3,13 @@ from pydantic import BaseModel
 import joblib
 import os
 import sys
+import nltk
 
 # make sure feature_extractors.py is importable
 sys.path.append(os.path.dirname(__file__))
 
 from feature_extractor import PreprocessingTransformer, CustomFeatureExtractor, VaderLexiconExtractor
+nltk.data.path.append(os.path.join(os.path.dirname(__file__), "nltk_data"))
 
 # Load trained pipeline
 pipeline = joblib.load(os.path.join(os.path.dirname(__file__), "sentiment_pipeline.pkl"))
@@ -36,4 +38,5 @@ def predict_sentiment(request: SentimentRequest):
         "predicted_label": int(prediction),
         "probabilities": proba
     }
+
 
